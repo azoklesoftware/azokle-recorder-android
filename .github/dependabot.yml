@@ -18,6 +18,17 @@ updates:
       - "gradle"
     commit-message:
       prefix: "build(deps)"
+    ignore:
+      - dependency-name: "gradle"
+        versions: [">= 8.5"]
+      - dependency-name: "org.jetbrains.kotlin.android"
+        versions: [">= 2.0"]
+      - dependency-name: "androidx.activity:*"
+        versions: [">= 1.9.0"]
+      - dependency-name: "androidx.core:*"
+        versions: [">= 1.13.0"]
+      - dependency-name: "androidx.lifecycle:*"
+        versions: [">= 2.8.0"]
     groups:
       # Group all AndroidX updates into one PR
       androidx:
