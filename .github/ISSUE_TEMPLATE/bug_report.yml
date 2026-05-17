@@ -1,0 +1,85 @@
+name: "🐛 Bug Report"
+description: Report a bug or unexpected behaviour in Azokle Recorder
+labels: ["bug", "needs-triage"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug! Please fill in as much detail as possible.
+        **For security vulnerabilities, email security@azokle.com instead of filing an issue.**
+
+  - type: input
+    id: app_version
+    attributes:
+      label: App Version
+      description: Found in Settings → About. Example: 1.1 (versionCode 1)
+      placeholder: e.g. 1.1
+    validations:
+      required: true
+
+  - type: input
+    id: android_version
+    attributes:
+      label: Android Version & Device
+      description: Android OS version and device model
+      placeholder: e.g. Android 14 — Pixel 7
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: What happened? What did you expect to happen?
+      placeholder: |
+        When I tap the record button...
+        Expected: recording starts
+        Actual: the app crashes
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Exact steps to reliably reproduce the issue
+      placeholder: |
+        1. Open the app
+        2. Tap the microphone button
+        3. ...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: recording_mode
+    attributes:
+      label: Recording Mode
+      options:
+        - Standard Quality (AAC/M4A)
+        - High Quality (WAV)
+        - Both / Not sure
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logcat Output (optional)
+      description: |
+        Paste relevant logcat output here.
+        Capture with: `adb logcat -s RecorderActivity SoundRecorderService`
+      render: text
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: I am on the latest version of the app
+          required: true
+        - label: This is NOT a security vulnerability (those go to security@azokle.com)
+          required: true

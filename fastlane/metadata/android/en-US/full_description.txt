@@ -1,0 +1,34 @@
+Record audio privately and clearly — no ads, no cloud, no tracking.
+
+Azokle Recorder is a clean, lightweight audio recorder built for privacy. Every recording stays on your device, stored securely through the Android MediaStore — never uploaded anywhere.
+
+<b>Simple one-tap recording</b>
+Start, pause, resume, and stop in a single tap. A live waveform visualiser shows your audio in real time so you always know you're being heard.
+
+<b>Two quality modes</b>
+• Standard Quality — AAC encoded in M4A for compact, shareable files
+• High Quality — Uncompressed WAV (44100 Hz, stereo, 16-bit) for studio-grade captures
+
+<b>Smart filename tagging</b>
+Optionally tag recordings with your current location so you can instantly remember where they were made — no manual renaming needed.
+
+<b>Persistent notification controls</b>
+Control your recording (pause, resume, stop) straight from the notification shade without even opening the app.
+
+<b>Auto-pause on calls</b>
+Azokle Recorder detects incoming phone calls and automatically pauses your recording so you never accidentally record a private conversation.
+
+<b>Recordings manager</b>
+Browse all your recordings, rename them, share them with any app, play them back, or delete them — individually or in bulk.
+
+<b>Privacy by design</b>
+No internet permission. No analytics. No ads. No accounts. Your audio never leaves your device.
+
+<b>Material You · Day &amp; Night themes</b>
+Follows your system theme automatically with a clean Material Design 3 interface.
+
+<b>Supports 70+ languages</b>
+Fully localised for users around the world.
+
+— Azokle Recorder is part of the Azokle Software suite by Azokle Private Limited.
+Learn more at https://azokle.com

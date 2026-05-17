@@ -1,0 +1,127 @@
+# SPDX-FileCopyrightText: 2025 Azokle Private Limited
+# SPDX-License-Identifier: Apache-2.0
+#
+# Release workflow — triggered on version tags (v*)
+# Builds a release APK and publishes it as a GitHub Release.
+
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag name for the release (e.g. v1.2.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    name: Build & Publish Release
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Checkout ────────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ── Java setup ──────────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: 17
+          cache: "gradle"
+
+      # ── Read version info ───────────────────────────────────────────────────
+      - name: Extract version info
+        id: version
+        run: |
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          VERSION_CODE=$(grep 'versionCode' app/build.gradle.kts | head -1 | grep -o '[0-9]\+')
+          TAG=${GITHUB_REF_NAME:-${{ github.event.inputs.tag }}}
+          echo "version_name=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "version_code=$VERSION_CODE"  >> $GITHUB_OUTPUT
+          echo "tag=$TAG"                    >> $GITHUB_OUTPUT
+          echo "📦 Version: $VERSION_NAME ($VERSION_CODE) — Tag: $TAG"
+
+      # ── Build unsigned release APK ──────────────────────────────────────────
+      - name: Build release APK (unsigned)
+        run: ./gradlew assembleRelease --no-daemon
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g"
+
+      # ── Sign APK (optional — uses repository secret) ───────────────────────
+      - name: Sign APK
+        if: ${{ env.KEYSTORE_BASE64 != '' }}
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        run: |
+          echo "$KEYSTORE_BASE64" | base64 --decode > /tmp/release.keystore
+          $ANDROID_HOME/build-tools/$(ls $ANDROID_HOME/build-tools/ | tail -1)/apksigner sign \
+            --ks /tmp/release.keystore \
+            --ks-key-alias "$KEY_ALIAS" \
+            --ks-pass "pass:$KEYSTORE_PASSWORD" \
+            --key-pass "pass:$KEY_PASSWORD" \
+            --out app/build/outputs/apk/release/app-release-signed.apk \
+            app/build/outputs/apk/release/app-release-unsigned.apk
+          rm /tmp/release.keystore
+
+      # ── Rename APK ──────────────────────────────────────────────────────────
+      - name: Rename APK
+        run: |
+          VERSION=${{ steps.version.outputs.version_name }}
+          mkdir -p dist
+          # Use signed APK if available, otherwise unsigned
+          if [ -f "app/build/outputs/apk/release/app-release-signed.apk" ]; then
+            cp app/build/outputs/apk/release/app-release-signed.apk \
+               "dist/AzokleRecorder-$VERSION.apk"
+          else
+            cp app/build/outputs/apk/release/app-release-unsigned.apk \
+               "dist/AzokleRecorder-$VERSION-unsigned.apk"
+          fi
+          ls -lh dist/
+
+      # ── Upload APK artifact ─────────────────────────────────────────────────
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AzokleRecorder-${{ steps.version.outputs.version_name }}
+          path: dist/*.apk
+          retention-days: 90
+
+      # ── Extract CHANGELOG for this version ──────────────────────────────────
+      - name: Extract release notes
+        id: changelog
+        run: |
+          VERSION=${{ steps.version.outputs.version_name }}
+          # Extract section between version headers from CHANGELOG.md
+          NOTES=$(awk "/^## \[$VERSION\]/{flag=1; next} /^## \[/{flag=0} flag" CHANGELOG.md | sed '/^$/d' | head -40)
+          if [ -z "$NOTES" ]; then
+            NOTES="See [CHANGELOG.md](CHANGELOG.md) for full release notes."
+          fi
+          # Write to file to handle multiline safely
+          echo "$NOTES" > /tmp/release_notes.md
+          echo "notes_file=/tmp/release_notes.md" >> $GITHUB_OUTPUT
+
+      # ── Create GitHub Release ───────────────────────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: "Azokle Recorder ${{ steps.version.outputs.version_name }}"
+          body_path: ${{ steps.changelog.outputs.notes_file }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.tag, '-') }}
+          files: dist/*.apk
+          token: ${{ secrets.GITHUB_TOKEN }}

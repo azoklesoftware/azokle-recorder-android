@@ -1,0 +1,34 @@
+# SPDX-FileCopyrightText: 2024 The LineageOS Project
+# SPDX-FileCopyrightText: 2025 Azokle Private Limited
+# SPDX-License-Identifier: Apache-2.0
+
+version = 1
+SPDX-PackageName = "Azokle Recorder"
+SPDX-PackageSupplier = "Azokle Private Limited"
+SPDX-PackageDownloadLocation = "https://github.com/azoklesoftware/azokle-recorder-android"
+
+[[annotations]]
+path = [".github/workflows/**", ".gitattributes", ".gitignore"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2016-2023 The LineageOS Project"
+SPDX-FileCopyrightText = "2025 Azokle Private Limited"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "gradle/wrapper/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2007-2023 Gradle, Inc."
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "fastlane/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Azokle Private Limited"
+SPDX-License-Identifier = "Apache-2.0"
+
+
+[[annotations]]
+path = ["*.md", "*.txt", "NOTICE", "CHANGELOG.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SECURITY.md"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 Azokle Private Limited"
+SPDX-License-Identifier = "Apache-2.0"

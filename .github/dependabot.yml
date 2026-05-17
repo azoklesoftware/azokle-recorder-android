@@ -1,0 +1,57 @@
+# SPDX-FileCopyrightText: 2025 Azokle Private Limited
+# SPDX-License-Identifier: Apache-2.0
+
+version: 2
+
+updates:
+  # ── Gradle dependencies ────────────────────────────────────────────────────
+  - package-ecosystem: "gradle"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "gradle"
+    commit-message:
+      prefix: "build(deps)"
+    groups:
+      # Group all AndroidX updates into one PR
+      androidx:
+        patterns:
+          - "androidx.*"
+      # Group all Lifecycle updates
+      lifecycle:
+        patterns:
+          - "androidx.lifecycle*"
+      # Group all Kotlin updates
+      kotlin:
+        patterns:
+          - "org.jetbrains.kotlin*"
+          - "org.jetbrains*"
+      # Group all Material updates
+      material:
+        patterns:
+          - "com.google.android.material*"
+
+  # ── GitHub Actions ─────────────────────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Asia/Kolkata"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci(deps)"
+    groups:
+      actions:
+        patterns:
+          - "actions/*"

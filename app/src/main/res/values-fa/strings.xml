@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     SPDX-FileCopyrightText: 2017-2021 The LineageOS Project
+     SPDX-FileCopyrightText: 2025 Azokle Private Limited
+     SPDX-License-Identifier: Apache-2.0
+-->
+<resources>
+    <string name="app_name">Azokle Recorder</string>
+    <string name="share">هم‌رسانی</string>
+</resources>

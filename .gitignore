@@ -1,0 +1,86 @@
+# ===========================
+# Azokle Recorder — .gitignore
+# ===========================
+
+# ----------------------------
+# Gradle
+# ----------------------------
+.gradle/
+gradle-app.setting
+!gradle-wrapper.jar
+.gradletasknamecache
+
+# Build outputs
+/build/
+app/build/
+**/build/
+
+# ----------------------------
+# Android / AAPT
+# ----------------------------
+/local.properties
+*.ap_
+*.apk
+*.aab
+/captures/
+.externalNativeBuild/
+.cxx/
+
+# Release artifacts (keep keystore reference files, not the APK itself)
+/release/
+app/release/
+
+# Lint
+lint/
+*.lint
+
+# ----------------------------
+# IntelliJ IDEA / Android Studio
+# ----------------------------
+/.idea/
+*.iml
+*.ipr
+*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/assetWizardSettings.xml
+.idea/dictionaries/
+.idea/libraries/
+.idea/caches/
+.idea/modules.xml
+.idea/navEditor.xml
+.idea/inspectionProfiles/
+out/
+
+# ----------------------------
+# VS Code
+# ----------------------------
+.vscode/
+
+# ----------------------------
+# OS generated
+# ----------------------------
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ----------------------------
+# Kotlin / Java
+# ----------------------------
+*.class
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+
+# ----------------------------
+# Keystore / Secrets
+# ----------------------------
+*.jks
+*.keystore
+keystore.properties
+signing.properties

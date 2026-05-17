@@ -1,0 +1,68 @@
+# SPDX-FileCopyrightText: 2025 Azokle Private Limited
+# SPDX-License-Identifier: Apache-2.0
+#
+# CodeQL Analysis — scans Kotlin source code for security vulnerabilities
+# and coding errors using GitHub's CodeQL engine.
+# Docs: https://docs.github.com/en/code-security/code-scanning
+
+name: codeql
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    # Run every Monday at 00:30 UTC (06:00 IST)
+    - cron: "30 0 * * 1"
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    name: CodeQL Analysis (Kotlin)
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - java-kotlin  # Covers both Java and Kotlin source files
+
+    steps:
+      # ── Checkout ─────────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── Java setup ───────────────────────────────────────────────────────────
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: 17
+          cache: "gradle"
+
+      # ── Initialize CodeQL ─────────────────────────────────────────────────
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          # Use the security-and-quality query suite for deeper analysis
+          queries: security-and-quality
+
+      # ── Build project (CodeQL needs compiled output for Java/Kotlin) ────────
+      - name: Build with Gradle
+        run: ./gradlew assembleDebug --no-daemon
+        env:
+          GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4g"
+
+      # ── Run CodeQL Analysis ───────────────────────────────────────────────
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
